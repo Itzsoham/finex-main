@@ -8,6 +8,7 @@ export const mockDataTeam = [
     age: 35,
     phone: "(665)121-5454",
     access: "admin",
+    dob: "1986-12-25",
   },
   {
     id: 2,
@@ -16,6 +17,7 @@ export const mockDataTeam = [
     age: 42,
     phone: "(421)314-2288",
     access: "manager",
+    dob: "1979-08-11",
   },
   {
     id: 3,
@@ -24,6 +26,7 @@ export const mockDataTeam = [
     age: 45,
     phone: "(422)982-6739",
     access: "user",
+    dob: "1976-03-15",
   },
   {
     id: 4,
@@ -32,6 +35,7 @@ export const mockDataTeam = [
     age: 16,
     phone: "(921)425-6742",
     access: "admin",
+    dob: "2005-07-22",
   },
   {
     id: 5,
@@ -40,6 +44,7 @@ export const mockDataTeam = [
     age: 31,
     phone: "(421)445-1189",
     access: "user",
+    dob: "1990-11-02",
   },
   {
     id: 6,
@@ -48,6 +53,7 @@ export const mockDataTeam = [
     age: 150,
     phone: "(232)545-6483",
     access: "manager",
+    dob: "1871-05-14",
   },
   {
     id: 7,
@@ -56,6 +62,7 @@ export const mockDataTeam = [
     age: 44,
     phone: "(543)124-0123",
     access: "user",
+    dob: "1977-09-30",
   },
   {
     id: 8,
@@ -64,6 +71,7 @@ export const mockDataTeam = [
     age: 36,
     phone: "(222)444-5555",
     access: "user",
+    dob: "1985-04-18",
   },
   {
     id: 9,
@@ -72,6 +80,7 @@ export const mockDataTeam = [
     age: 65,
     phone: "(444)555-6239",
     access: "admin",
+    dob: "1956-01-05",
   },
 ];
 
