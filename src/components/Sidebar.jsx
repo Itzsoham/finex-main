@@ -122,13 +122,6 @@ function Sidebar() {
               setSelected={setSelected}
             />
 
-            <Typography
-              variant="h6"
-              color={colors.grey[300]}
-              sx={{ m: "15px 0 5px 20px" }}
-            >
-              Data
-            </Typography>
             <Item
               title="Manage Team"
               to="/team"
@@ -140,13 +133,6 @@ function Sidebar() {
               title="Expense Types"
               to="/type"
               icon={<ContactsOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-            <Item
-              title="Expenses"
-              to="/expense"
-              icon={<ReceiptOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
             />
@@ -165,13 +151,13 @@ function Sidebar() {
               selected={selected}
               setSelected={setSelected}
             />
-            {/* <Item
-              title="Calendar"
-              to="/calendar"
-              icon={<CalendarTodayOutlinedIcon />}
+            <Item
+              title="Expenses"
+              to="/expense"
+              icon={<ReceiptOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
-            /> */}
+            />
             <Item
               title="FAQ Page"
               to="/faq"

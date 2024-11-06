@@ -1,12 +1,11 @@
 import supabase, { supabaseUrl } from "./supabase";
 
-export async function signup({ fullName, email, password }) {
-  console.log({ fullName, email, password });
+export async function signup({ fullName, email, password, role, phone }) {
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
     options: {
-      data: { fullName, avtar: "" },
+      data: { fullName, avtar: "", role, phone },
     },
   });
 
@@ -14,7 +13,6 @@ export async function signup({ fullName, email, password }) {
     throw new Error(error.message);
   }
 
-  console.log(data);
   return data;
 }
 
@@ -90,4 +88,25 @@ export async function updateCurrentUser({ fullName, avatar, password }) {
   }
 
   return updatedUser;
+}
+
+export async function getAllUsers() {
+  const { data, error } = await supabase.auth.admin.listUsers({
+    page: 1,
+    perPage: 1000,
+  });
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data;
+}
+
+export async function deleteUser(userId) {
+  const { error } = await supabase.auth.admin.deleteUser(userId);
+
+  if (error) {
+    throw new Error(error.message);
+  }
 }

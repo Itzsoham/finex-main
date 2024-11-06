@@ -10,8 +10,8 @@ import {
 } from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup";
-import Heading from "./Heading";
-import { useSignup } from "../features/authentication/useSignUp";
+import Heading from "../../components/Heading";
+import { useSignup } from "./useSignUp";
 import PropsType from "prop-types";
 
 const phoneRegExp =
@@ -41,9 +41,12 @@ const CreateTeamMember = ({ setOpen }) => {
 
   // Function to handle form submission and log form values
   const handleFormSubmit = (values) => {
-    const { name: fullName, role, email, password, contact } = values;
+    const { name: fullName, role, email, password, contact: phone } = values;
 
-    signup({ email, password, fullName }, { onSettled: () => setOpen(false) });
+    signup(
+      { email, password, fullName, role, phone },
+      { onSettled: () => setOpen(false) }
+    );
   };
 
   return (

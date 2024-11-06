@@ -6,9 +6,7 @@ import * as yup from "yup";
 function ExpenseEntry() {
   const isNonMobile = useMediaQuery("(min-width:600px)");
 
-  const handleFormSubmit = (values) => {
-    console.log(values);
-  };
+  const handleFormSubmit = (values) => {};
 
   return (
     <Box m="20px">

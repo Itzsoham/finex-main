@@ -1,23 +1,67 @@
 import { useState } from "react";
 import { Box, Button, Modal, Typography, useTheme } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import { mockDataTeam } from "../data/mockData";
 import { tokens } from "../theme";
 import AdminPanelSettingsOutlinedIcon from "@mui/icons-material/AdminPanelSettingsOutlined";
 import LockOpenOutlinedIcon from "@mui/icons-material/LockOpenOutlined";
-import SecurityOutlinedIcon from "@mui/icons-material/SecurityOutlined";
+// import SecurityOutlinedIcon from "@mui/icons-material/SecurityOutlined";
+import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import Heading from "../components/Heading";
-import CreateTeamMember from "../components/CreateTeamMember";
+import CreateTeamMember from "../features/authentication/CreateTeamMember";
+import { useTeam } from "../features/authentication/useTeam";
+import Spinner from "../components/Spinner";
+import ConfirmDelete from "../components/ConfirmDelete";
+import { useDeleteUser } from "../features/authentication/useDeleteUser";
 
 const Team = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const [open, setOpen] = useState(false);
+  const [openDelete, setOpenDelete] = useState(false);
+  const [selectedUserId, setSelectedUserId] = useState(null);
+  const { isLoading, users: Data } = useTeam();
+  const { isLoading: isDeleting, deleteUser } = useDeleteUser();
+
+  if (isLoading) return <Spinner />;
+
+  const { users } = Data;
+
+  const formattedUsers = users?.map((user) => ({
+    id: user.id,
+    email: user.email,
+    fullName: user.user_metadata?.fullName || "N/A",
+    phone: user.user_metadata?.phone || "N/A",
+    role: user.user_metadata?.role || "N/A",
+    access: user.user_metadata?.role || "user",
+  }));
+
+  const handleDeleteClick = (id) => {
+    setSelectedUserId(id);
+    setOpenDelete(true);
+  };
 
   const columns = [
-    { field: "id", headerName: "ID" },
     {
-      field: "name",
+      field: "delete",
+      headerName: "Delete",
+      headerAlign: "center",
+      renderCell: (params) => (
+        <Box
+          width="60%"
+          m="0 auto"
+          p="5px"
+          marginTop={"10px"}
+          display="flex"
+          justifyContent="center"
+          color="#ff3f3fbd"
+          onClick={() => handleDeleteClick(params.id)}
+        >
+          <DeleteOutlineOutlinedIcon />
+        </Box>
+      ),
+    },
+    {
+      field: "fullName",
       headerName: "Name",
       flex: 1,
       cellClassName: "name-column--cell",
@@ -37,33 +81,30 @@ const Team = () => {
       headerName: "Access Level",
       flex: 1,
       headerAlign: "center",
-      renderCell: ({ row: { access } }) => {
-        return (
-          <Box
-            width="60%"
-            m="0 auto"
-            marginTop={"10px"}
-            p="5px"
-            display="flex"
-            justifyContent="center"
-            backgroundColor={
-              access === "admin"
-                ? colors.greenAccent[600]
-                : access === "manager"
-                ? colors.greenAccent[700]
-                : colors.greenAccent[800]
-            }
-            borderRadius="4px"
-          >
-            {access === "admin" && <AdminPanelSettingsOutlinedIcon />}
-            {access === "manager" && <SecurityOutlinedIcon />}
-            {access === "user" && <LockOpenOutlinedIcon />}
-            <Typography color={colors.grey[100]} sx={{ ml: "5px" }}>
-              {access}
-            </Typography>
-          </Box>
-        );
-      },
+      renderCell: ({ row: { access } }) => (
+        <Box
+          width="60%"
+          m="0 auto"
+          p="5px"
+          marginTop={"10px"}
+          display="flex"
+          justifyContent="center"
+          backgroundColor={
+            access === "Admin"
+              ? colors.greenAccent[600]
+              : access === "User"
+              ? colors.greenAccent[700]
+              : colors.greenAccent[800]
+          }
+          borderRadius="4px"
+        >
+          {access === "Admin" && <AdminPanelSettingsOutlinedIcon />}
+          {access === "User" && <LockOpenOutlinedIcon />}
+          <Typography color={colors.grey[100]} sx={{ ml: "5px" }}>
+            {access}
+          </Typography>
+        </Box>
+      ),
     },
   ];
 
@@ -93,10 +134,8 @@ const Team = () => {
               transform: "translate(-50%, -50%)",
               width: "80vw",
               height: "80vh",
+              overflow: "auto",
               bgcolor: colors.primary[400],
-              // border: "2px solid",
-
-              // borderColor: colors.blueAccent[700],
               borderRadius: "5px",
               boxShadow: 24,
               p: 4,
@@ -106,6 +145,7 @@ const Team = () => {
           </Box>
         </Modal>
       </Box>
+
       <Box
         height="75vh"
         sx={{
@@ -135,8 +175,35 @@ const Team = () => {
           },
         }}
       >
-        <DataGrid rows={mockDataTeam} columns={columns} />
+        <DataGrid rows={formattedUsers} columns={columns} />
       </Box>
+      <Modal open={openDelete} onClose={() => setOpenDelete(false)}>
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: "40vw",
+            height: "auto",
+            bgcolor: colors.primary[400],
+            borderRadius: "5px",
+            boxShadow: 24,
+            p: 4,
+          }}
+        >
+          <ConfirmDelete
+            resourceName="Team Member"
+            disabled={isDeleting}
+            onConfirm={() =>
+              deleteUser(selectedUserId, {
+                onSettled: () => setOpenDelete(false),
+              })
+            }
+            onCloseModal={() => setOpenDelete(false)}
+          />
+        </Box>
+      </Modal>
     </Box>
   );
 };
