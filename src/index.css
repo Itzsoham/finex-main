@@ -37,3 +37,41 @@ body,
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
+
+/* for date picker  */
+
+/* Apply background and text colors */
+.react-datepicker__header {
+  background-color: gray; /* Adjust to your theme */
+  /* background-color: var(--mui-background-color) ; Adjust to your theme */
+}
+
+.react-datepicker__day,
+.react-datepicker__day-name {
+  /* color: var(--mui-text-color); Adjust to your theme */
+  color: aqua;
+}
+
+.react-datepicker__month-container {
+  /* background-color: var(--mui-background-color); */
+  /* background-color: lightgreen; */
+}
+
+.react-datepicker__day--selected,
+.react-datepicker__day--keyboard-selected {
+  /* background-color: var(--mui-primary-color); */
+  background-color: lightblue;
+  color: white;
+}
+
+@media print {
+  * {
+    color: black !important; /* Set font color to black for print */
+    background: white !important; /* Remove background colors for print */
+  }
+
+  /* You can also specify specific classes if needed */
+  .MuiDataGrid-root {
+    color: black !important;
+  }
+}

@@ -1,12 +1,52 @@
-import { Box, Button, TextField, useMediaQuery } from "@mui/material";
-import Heading from "../components/Heading";
+import {
+  Box,
+  Button,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+  useMediaQuery,
+} from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import Heading from "../components/Heading";
+import { useTypes } from "../features/type/useTypes";
+import PropsType from "prop-types";
+import { useAddExpense } from "../features/expense/useAddExpense";
+import { useEditExpense } from "../features/expense/useEditExpense";
+import { useUser } from "../features/authentication/useUser";
+import { useParams } from "react-router-dom";
 
 function ExpenseEntry() {
   const isNonMobile = useMediaQuery("(min-width:600px)");
+  const { types } = useTypes();
+  const { isEditing, editExpense } = useEditExpense();
+  const { isCreating, addExpense } = useAddExpense();
+  const { userId } = useUser();
+  const { id } = useParams();
+  +9;
+  const isEditsession = !!id;
+  console.log(isEditsession);
 
-  const handleFormSubmit = (values) => {};
+  const isLoading = isEditing || isCreating;
+
+  const handleFormSubmit = (values) => {
+    console.log(values);
+
+    const expenseData = {
+      ...values,
+      created_by: userId,
+    };
+
+    if (isEditsession) {
+      editExpense({ expense: expenseData, id });
+    } else {
+      addExpense(expenseData);
+    }
+  };
 
   return (
     <Box m="20px">
@@ -24,6 +64,7 @@ function ExpenseEntry() {
           handleBlur,
           handleChange,
           handleSubmit,
+          setFieldValue,
         }) => (
           <form onSubmit={handleSubmit}>
             <Box
@@ -34,88 +75,154 @@ function ExpenseEntry() {
                 "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
               }}
             >
+              <DatePicker
+                selected={values.date}
+                onChange={(date) => setFieldValue("date", date)}
+                onBlur={handleBlur}
+                dateFormat="dd/MM/yyyy"
+                customInput={
+                  <TextField
+                    label="Date"
+                    variant="filled"
+                    fullWidth
+                    error={!!touched.date && !!errors.date}
+                    helperText={touched.date && errors.date}
+                    sx={{ gridColumn: "span 2" }}
+                  />
+                }
+              />
               <TextField
                 fullWidth
                 variant="filled"
-                type="text"
-                label="First Name"
+                type="number"
+                label="Bill No"
                 onBlur={handleBlur}
                 onChange={handleChange}
-                value={values.firstName}
-                name="firstName"
-                error={!!touched.firstName && !!errors.firstName}
-                helperText={touched.firstName && errors.firstName}
+                value={values.billNo}
+                name="billNo"
+                error={!!touched.billNo && !!errors.billNo}
+                helperText={touched.billNo && errors.billNo}
+                sx={{ gridColumn: "span 1" }}
+              />
+              <FormControl
+                variant="filled"
                 sx={{ gridColumn: "span 2" }}
+                error={!!touched.type && !!errors.type}
+              >
+                <InputLabel id="type">Expense type</InputLabel>
+
+                <Select
+                  labelId="type"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  name="type"
+                  value={values.type}
+                >
+                  {types?.map((type) => (
+                    <MenuItem key={type.id} value={type.id}>
+                      {type.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+                {touched.type && errors.type && (
+                  <Box color="error.main" mt={1}>
+                    {errors.type}
+                  </Box>
+                )}
+              </FormControl>
+              <TextField
+                fullWidth
+                variant="filled"
+                type="text"
+                label="Description"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.desc}
+                name="desc"
+                error={!!touched.desc && !!errors.desc}
+                helperText={touched.desc && errors.desc}
+                sx={{ gridColumn: "span 4" }}
               />
               <TextField
                 fullWidth
                 variant="filled"
                 type="text"
-                label="Last Name"
+                label="Vendor Name"
                 onBlur={handleBlur}
                 onChange={handleChange}
-                value={values.lastName}
-                name="lastName"
-                error={!!touched.lastName && !!errors.lastName}
-                helperText={touched.lastName && errors.lastName}
+                value={values.vendor}
+                name="vendor"
+                error={!!touched.vendor && !!errors.vendor}
+                helperText={touched.vendor && errors.vendor}
+                sx={{ gridColumn: "span 4" }}
+              />
+              <FormControl
+                variant="filled"
                 sx={{ gridColumn: "span 2" }}
+                error={!!touched.payment && !!errors.payment}
+              >
+                <InputLabel id="type">Payment type</InputLabel>
+
+                <Select
+                  labelId="payment"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  name="payment"
+                  value={values.payment}
+                >
+                  <MenuItem value="cash">Cash</MenuItem>
+                  <MenuItem value="cheque">Cheque</MenuItem>
+                  <MenuItem value="online">Online</MenuItem>
+                </Select>
+                {touched.payment && errors.payment && (
+                  <Box color="error.main" mt={1}>
+                    {errors.payment}
+                  </Box>
+                )}
+              </FormControl>
+              <TextField
+                fullWidth
+                variant="filled"
+                type="number"
+                label="Amount"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.amount}
+                name="amount"
+                error={!!touched.amount && !!errors.amount}
+                helperText={touched.amount && errors.amount}
+                sx={{ gridColumn: "span 1" }}
+              />{" "}
+              <TextField
+                fullWidth
+                variant="filled"
+                type="number"
+                label="Case"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.case}
+                name="case"
+                error={!!touched.case && !!errors.case}
+                helperText={touched.case && errors.case}
+                sx={{ gridColumn: "span 1" }}
               />
               <TextField
                 fullWidth
                 variant="filled"
                 type="text"
-                label="Email"
+                label="Remarks"
                 onBlur={handleBlur}
                 onChange={handleChange}
-                value={values.email}
-                name="email"
-                error={!!touched.email && !!errors.email}
-                helperText={touched.email && errors.email}
-                sx={{ gridColumn: "span 4" }}
-              />
-              <TextField
-                fullWidth
-                variant="filled"
-                type="text"
-                label="Contact Number"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.contact}
-                name="contact"
-                error={!!touched.contact && !!errors.contact}
-                helperText={touched.contact && errors.contact}
-                sx={{ gridColumn: "span 4" }}
-              />
-              <TextField
-                fullWidth
-                variant="filled"
-                type="text"
-                label="Address 1"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.address1}
-                name="address1"
-                error={!!touched.address1 && !!errors.address1}
-                helperText={touched.address1 && errors.address1}
-                sx={{ gridColumn: "span 4" }}
-              />
-              <TextField
-                fullWidth
-                variant="filled"
-                type="text"
-                label="Address 2"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.address2}
-                name="address2"
-                error={!!touched.address2 && !!errors.address2}
-                helperText={touched.address2 && errors.address2}
+                value={values.remarks}
+                name="remarks"
+                error={!!touched.remarks && !!errors.remarks}
+                helperText={touched.remarks && errors.remarks}
                 sx={{ gridColumn: "span 4" }}
               />
             </Box>
             <Box display="flex" justifyContent="end" mt="20px">
               <Button type="submit" color="secondary" variant="contained">
-                Create New User
+                {isLoading ? "Creating..." : "Create New Expense"}
               </Button>
             </Box>
           </form>
@@ -125,27 +232,32 @@ function ExpenseEntry() {
   );
 }
 
-const phoneRegExp =
-  /^((\+[1-9]{1,4}[ -]?)|(\([0-9]{2,3}\)[ -]?)|([0-9]{2,4})[ -]?)*?[0-9]{3,4}[ -]?[0-9]{3,4}$/;
-
 const checkoutSchema = yup.object().shape({
-  firstName: yup.string().required("required"),
-  lastName: yup.string().required("required"),
-  email: yup.string().email("invalid email").required("required"),
-  contact: yup
-    .string()
-    .matches(phoneRegExp, "Phone number is not valid")
-    .required("required"),
-  address1: yup.string().required("required"),
-  address2: yup.string().required("required"),
+  date: yup.date().required("required"),
+  billNo: yup.number().required("required"),
+  type: yup.string().required("required"),
+  desc: yup.string().required("required"),
+  vendor: yup.string().required("required"),
+  amount: yup.number().required("required"),
+  case: yup.number().required("required"),
+  payment: yup.string().required("required"),
+  remarks: yup.string().required("required"),
 });
+
 const initialValues = {
-  firstName: "",
-  lastName: "",
-  email: "",
-  contact: "",
-  address1: "",
-  address2: "",
+  date: new Date(),
+  billNo: "",
+  type: "",
+  desc: "",
+  vendor: "",
+  amount: "",
+  case: "",
+  payment: "",
+  remarks: "",
+};
+
+ExpenseEntry.propTypes = {
+  id: PropsType.string,
 };
 
 export default ExpenseEntry;

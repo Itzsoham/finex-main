@@ -3,20 +3,29 @@ import supabase from "./supabase";
 export async function addEditType(type, id) {
   let query = supabase.from("Type");
 
-  // create type
-  if (!id) query = await query.insert([type]).select();
-
-  // update type
-  if (id) query = query.update({ ...type }).eq("id", id);
-
-  const { data, error } = await query.select().single(); // Keep a single select() call here
-
-  if (error) {
-    console.error(error);
-    throw new Error("Failed to add type");
+  // Create type
+  if (!id) {
+    const { data, error } = await query.insert([type]).select().single(); // single() to get one result
+    if (error) {
+      console.error(error);
+      throw new Error("Failed to add type");
+    }
+    return data;
   }
 
-  return data;
+  // Update type
+  if (id) {
+    const { data, error } = await query
+      .update({ ...type })
+      .eq("id", id)
+      .select()
+      .single();
+    if (error) {
+      console.error(error);
+      throw new Error("Failed to update type");
+    }
+    return data;
+  }
 }
 
 export async function getAllTypes() {

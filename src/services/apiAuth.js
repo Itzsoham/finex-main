@@ -51,43 +51,45 @@ export async function logout() {
   }
 }
 
-export async function updateCurrentUser({ fullName, avatar, password }) {
-  // 1 - Update user fullName or password
-  let updataData = {};
-  if (password) updataData = { password };
-  if (fullName) updataData = { data: { fullName } };
+export async function updateCurrentUser({ fullName, avatar, phone }) {
+  // 1 - Update user fullName and phone
+  const updateData = { data: {} };
+  if (phone) updateData.data.phone = phone;
+  if (fullName) updateData.data.fullName = fullName;
 
-  const { data, error } = await supabase.auth.updateUser(updataData);
+  const { data, error } = await supabase.auth.updateUser(updateData);
 
   if (error) {
     throw new Error(error.message);
   }
 
-  // 2 - Upload avatar image
-  if (!avatar) return data;
+  // 2 - Upload avatar image if present
+  if (avatar) {
+    const fileName = `avatar-${data.user.id}-${Math.random()}`;
+    const { error: uploadError } = await supabase.storage
+      .from("avatars")
+      .upload(fileName, avatar);
 
-  const fileName = `avatar-${data.user.id}-${Math.random()}`;
-  const { error: uploadError } = await supabase.storage
-    .from("avatars")
-    .upload(fileName, avatar);
+    if (uploadError) {
+      throw new Error(uploadError.message);
+    }
 
-  if (uploadError) {
-    throw new Error(uploadError.message);
+    // 3 - Update avatar URL in User
+    const { data: updatedUser, error: updateError } =
+      await supabase.auth.updateUser({
+        data: {
+          avatar: `${supabaseUrl}/storage/v1/object/public/avatars/${fileName}`,
+        },
+      });
+
+    if (updateError) {
+      throw new Error(updateError.message);
+    }
+
+    return updatedUser;
   }
 
-  //3 - Update avatar URL in User
-  const { data: updatedUser, error: updateError } =
-    await supabase.auth.updateUser({
-      data: {
-        avatar: `${supabaseUrl}/storage/v1/object/public/avatars/${fileName}`,
-      },
-    });
-
-  if (updateError) {
-    throw new Error(updateError.message);
-  }
-
-  return updatedUser;
+  return data;
 }
 
 export async function getAllUsers() {

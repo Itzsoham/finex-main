@@ -7,7 +7,7 @@ export function useAddType() {
   const { mutate: addType, isPending: isCreating } = useMutation({
     mutationFn: addTypeApi,
     onSuccess: () => {
-      toast.success("New cabin successfully created");
+      toast.success("New type successfully created");
 
       queryClient.invalidateQueries({
         queryKey: ["types"],

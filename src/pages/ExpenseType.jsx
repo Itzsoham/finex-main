@@ -54,6 +54,7 @@ function ExpenseType() {
       field: "edit",
       headerName: "Edit",
       headerAlign: "center",
+
       renderCell: (params) => (
         <Box
           width="60%"
@@ -73,13 +74,7 @@ function ExpenseType() {
         </Box>
       ),
     },
-    {
-      field: "id",
-      headerName: "ID",
-      flex: 0.5,
-      headerAlign: "center",
-      align: "center",
-    },
+
     {
       field: "name",
       headerName: "Name",
