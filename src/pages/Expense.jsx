@@ -5,11 +5,13 @@ import { useExpenses } from "../features/expense/useExpenses";
 import Spinner from "../components/Spinner";
 import { Box, Button, Modal } from "@mui/material";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
+import CheckOutlinedIcon from "@mui/icons-material/CheckOutlined";
 import Heading from "../components/Heading";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import ConfirmDelete from "../components/ConfirmDelete";
 import { useNavigate } from "react-router-dom";
 import { useDeleteExpense } from "../features/expense/useDeleteExpense";
+import { useApproveExpense } from "../features/expense/useApproveExpense";
 
 const Expense = () => {
   const theme = useTheme();
@@ -18,11 +20,12 @@ const Expense = () => {
   const { isLoading, expenses } = useExpenses();
   const { isLoading: isDeleting, deleteExpense } = useDeleteExpense();
   const navigate = useNavigate();
+  const { isEditing, approveExpense } = useApproveExpense();
 
   const [openDelete, setOpenDelete] = useState(false);
   const [selectedExpenseId, setSelectedExpenseId] = useState(null);
 
-  if (isLoading) return <Spinner />;
+  if (isLoading && isEditing) return <Spinner />;
 
   const formattedExpenses = expenses?.map((expense) => ({
     ...expense,
@@ -38,19 +41,23 @@ const Expense = () => {
     handleDeleteClick(id);
   };
 
+  const handleApproveIconClick = (id) => () => {
+    approveExpense(id);
+  };
+
   const columns = [
     {
       field: "delete",
       headerName: "Delete",
       headerAlign: "center",
+      width: 60,
       renderCell: (params) => (
         <Box
-          width="60%"
-          m="0 auto"
           p="5px"
           mt="10px"
           display="flex"
           justifyContent="center"
+          cursor="pointer"
           color="#ff3f3fbd"
           onClick={handleDeleteIconClick(params.id)}
         >
@@ -58,16 +65,35 @@ const Expense = () => {
         </Box>
       ),
     },
-    { field: "date", headerName: "Date", cellClassName: "name-column--cell" },
-    { field: "billNo", headerName: "Bill No" },
-    { field: "type", headerName: "Type" },
-    { field: "vendor", headerName: "Vendor Name", flex: 1 },
-    { field: "desc", headerName: "Description", flex: 1 },
-    { field: "payment", headerName: "Payment Type" },
-    { field: "amount", headerName: "Amount" },
-    { field: "case", headerName: "Case" },
-    { field: "remarks", headerName: "Remarks", flex: 1 },
-    { field: "created_by_name", headerName: "Created By" },
+    {
+      field: "approve",
+      headerName: "Approve",
+      headerAlign: "center",
+      width: 70,
+      renderCell: (params) => (
+        <Box
+          p="5px"
+          mt="10px"
+          display="flex"
+          justifyContent="center"
+          color="#38ff31bc"
+          onClick={handleApproveIconClick(params.id)}
+        >
+          <CheckOutlinedIcon />
+        </Box>
+      ),
+    },
+    { field: "status", headerName: "Status", flex: 1 }, // Expandable
+    { field: "date", headerName: "Date", width: 150 }, // Fixed width
+    { field: "billNo", headerName: "Bill No", width: 100 }, // Fixed width
+    { field: "type", headerName: "Expense Type", width: 200 }, // Expandable
+    { field: "vendor", headerName: "Vendor Name", flex: 1 }, // Expandable
+    { field: "desc", headerName: "Description", flex: 1 }, // Expandable
+    { field: "payment", headerName: "Payment Type", width: 120 }, // Fixed width
+    { field: "amount", headerName: "Amount", width: 100 }, // Fixed width
+    { field: "case", headerName: "Case", width: 100 }, // Fixed width
+    { field: "remarks", headerName: "Remarks", flex: 2 }, // Expandable
+    { field: "created_by_name", headerName: "Created By", width: 150 }, // Fixed width
   ];
 
   return (
@@ -93,15 +119,19 @@ const Expense = () => {
         height="75vh"
         width="100%"
         sx={{
-          overflowX: "auto",
+          overflowX: "auto", // Ensure horizontal scrolling is enabled
+          "&::-webkit-scrollbar": {
+            height: "5px", // Scrollbar height for horizontal scroll
+          },
           "& .MuiDataGrid-root": {
             border: "none",
+            width: "1500px", // Force wider width to exceed container width
           },
           "& .MuiDataGrid-cell": {
             borderBottom: "none",
           },
           "& .name-column--cell": {
-            color: colors.greenAccent[300],
+            width: "50px",
           },
           "& .MuiDataGrid-columnHeaders, & .MuiDataGrid-columnHeaders [role='row']":
             {
@@ -121,7 +151,6 @@ const Expense = () => {
           // Custom toolbar styles
           "& .MuiDataGrid-toolbarContainer": {
             backgroundImage: `linear-gradient(45deg, ${colors.greenAccent[400]} 0%, ${colors.blueAccent[400]} 100%)`,
-
             color: "white",
             width: "fit-content",
             borderRadius: "5px 5px 0 0",

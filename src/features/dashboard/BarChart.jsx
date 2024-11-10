@@ -28,6 +28,7 @@ const BarChart = ({ isdahboard = false }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const { expenses } = useExpenses();
+  // console.log(expenses);
   // Check if expenses data is available and not empty
   const processedData =
     expenses && expenses.length > 0 ? processData(expenses) : [];

@@ -18,6 +18,7 @@ import Login from "./pages/Login";
 import AppLayout from "./pages/AppLayout";
 import PageNotFound from "./pages/PageNotFound";
 import ProtectedRoute from "./components/ProtectedRoute";
+import ExpenseSummery from "./pages/ExpenseSummery";
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -40,6 +41,7 @@ function App() {
               <Route path="/team" element={<Team />} />
               <Route path="/type" element={<ExpenseType />} />
               <Route path="/expense" element={<Expense />} />
+              <Route path="/summery" element={<ExpenseSummery />} />
               <Route path="/add" element={<ExpenseEntry />} />
               <Route path="/faq" element={<Faq />} />
               <Route path="/calendar" element={<Calendar />} />

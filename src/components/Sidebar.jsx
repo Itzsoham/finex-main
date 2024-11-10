@@ -6,9 +6,11 @@ import {
   MenuItem,
   sidebarClasses,
 } from "react-pro-sidebar";
+import { useUser } from "../features/authentication/useUser";
 import { Box, IconButton, Typography, useTheme } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { tokens } from "../theme";
+
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined";
 import ContactsOutlinedIcon from "@mui/icons-material/ContactsOutlined";
@@ -19,7 +21,7 @@ import BarChartOutlinedIcon from "@mui/icons-material/BarChartOutlined";
 import PieChartOutlineOutlinedIcon from "@mui/icons-material/PieChartOutlineOutlined";
 import TimelineOutlinedIcon from "@mui/icons-material/TimelineOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
-import { useUser } from "../features/authentication/useUser";
+import SummarizeOutlinedIcon from "@mui/icons-material/SummarizeOutlined";
 
 function Sidebar() {
   const theme = useTheme();
@@ -124,8 +126,14 @@ function Sidebar() {
               icon={<HomeOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
+            />{" "}
+            <Item
+              title="Summery"
+              to="/summery"
+              icon={<SummarizeOutlinedIcon />}
+              selected={selected}
+              setSelected={setSelected}
             />
-
             <Item
               title="Manage Team"
               to="/team"
@@ -140,7 +148,6 @@ function Sidebar() {
               selected={selected}
               setSelected={setSelected}
             />
-
             <Typography
               variant="h6"
               color={colors.grey[300]}
@@ -169,7 +176,6 @@ function Sidebar() {
               selected={selected}
               setSelected={setSelected}
             />
-
             <Typography
               variant="h6"
               color={colors.grey[300]}

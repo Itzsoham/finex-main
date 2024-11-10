@@ -16,36 +16,22 @@ import Heading from "../components/Heading";
 import { useTypes } from "../features/type/useTypes";
 import PropsType from "prop-types";
 import { useAddExpense } from "../features/expense/useAddExpense";
-import { useEditExpense } from "../features/expense/useEditExpense";
 import { useUser } from "../features/authentication/useUser";
-import { useParams } from "react-router-dom";
+import { startOfMonth, endOfMonth } from "date-fns";
 
 function ExpenseEntry() {
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const { types } = useTypes();
-  const { isEditing, editExpense } = useEditExpense();
-  const { isCreating, addExpense } = useAddExpense();
+  const { isCreating: isLoading, addExpense } = useAddExpense();
   const { userId } = useUser();
-  const { id } = useParams();
-  +9;
-  const isEditsession = !!id;
-  console.log(isEditsession);
-
-  const isLoading = isEditing || isCreating;
 
   const handleFormSubmit = (values) => {
-    console.log(values);
-
     const expenseData = {
       ...values,
       created_by: userId,
     };
 
-    if (isEditsession) {
-      editExpense({ expense: expenseData, id });
-    } else {
-      addExpense(expenseData);
-    }
+    addExpense(expenseData);
   };
 
   return (
@@ -94,7 +80,7 @@ function ExpenseEntry() {
               <TextField
                 fullWidth
                 variant="filled"
-                type="number"
+                type="text"
                 label="Bill No"
                 onBlur={handleBlur}
                 onChange={handleChange}
@@ -233,8 +219,21 @@ function ExpenseEntry() {
 }
 
 const checkoutSchema = yup.object().shape({
-  date: yup.date().required("required"),
-  billNo: yup.number().required("required"),
+  date: yup
+    .date()
+    .required("required")
+    .test(
+      "is-current-month",
+      "Date must be within the current month",
+      (value) => {
+        if (!value) return false; // Ensure the date exists
+        const now = new Date();
+        const start = startOfMonth(now); // Start of current month
+        const end = endOfMonth(now); // End of current month
+        return value >= start && value <= end; // Check if date is within the range
+      }
+    ),
+  billNo: yup.string().required("required"),
   type: yup.string().required("required"),
   desc: yup.string().required("required"),
   vendor: yup.string().required("required"),
@@ -246,7 +245,7 @@ const checkoutSchema = yup.object().shape({
 
 const initialValues = {
   date: new Date(),
-  billNo: "",
+  billNo: "NA",
   type: "",
   desc: "",
   vendor: "",

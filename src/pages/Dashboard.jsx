@@ -8,14 +8,17 @@ import { tokens } from "../theme";
 import Heading from "../components/Heading";
 import StatBox from "../features/dashboard/StatBox";
 import ProgressCircle from "../features/dashboard/ProgressCircle";
-import { mockTransactions } from "../data/mockData";
 import LineChart from "../features/dashboard/LineChart";
 import BarChart from "../features/dashboard/BarChart";
 import PieChart from "../features/dashboard/PieChart";
+import RecipeList from "../features/recipe/RecipeList";
+import { useState } from "react";
+import CreateRecipeForm from "../features/recipe/CreateRecipeForm";
 
 const Dashboard = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+  const [open, setOpen] = useState(false);
 
   return (
     <Box m="20px">
@@ -165,40 +168,25 @@ const Dashboard = () => {
             p="15px"
           >
             <Typography color={colors.grey[100]} variant="h5" fontWeight="600">
-              Recent Transactions
+              Recipe List
             </Typography>
-          </Box>
-          {mockTransactions.map((transaction, i) => (
-            <Box
-              key={`${transaction.txId}-${i}`}
-              display="flex"
-              justifyContent="space-between"
-              alignItems="center"
-              borderBottom={`4px solid ${colors.primary[500]}`}
-              p="15px"
+            <Button
+              sx={{
+                height: "33px",
+                backgroundColor: colors.blueAccent[500],
+                color: colors.grey[100],
+                fontSize: "10px",
+              }}
+              type="submit"
+              color="info"
+              variant="contained"
+              onClick={() => setOpen(true)}
             >
-              <Box>
-                <Typography
-                  color={colors.greenAccent[500]}
-                  variant="h5"
-                  fontWeight="600"
-                >
-                  {transaction.txId}
-                </Typography>
-                <Typography color={colors.grey[100]}>
-                  {transaction.user}
-                </Typography>
-              </Box>
-              <Box color={colors.grey[100]}>{transaction.date}</Box>
-              <Box
-                backgroundColor={colors.greenAccent[500]}
-                p="5px 10px"
-                borderRadius="4px"
-              >
-                ${transaction.cost}
-              </Box>
-            </Box>
-          ))}
+              Create New Recipe
+            </Button>
+          </Box>
+          <CreateRecipeForm open={open} setOpen={setOpen} />
+          <RecipeList />
         </Box>
 
         {/* ROW 3 */}

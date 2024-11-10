@@ -85,3 +85,15 @@ export async function deleteExpense(id) {
     throw new Error("Failed to delete type");
   }
 }
+
+export async function approveExpense(id) {
+  const { error } = await supabase
+    .from("Expense")
+    .update({ status: "Approved" })
+    .match({ id });
+
+  if (error) {
+    console.error(error);
+    throw new Error("Failed to approve expense");
+  }
+}
