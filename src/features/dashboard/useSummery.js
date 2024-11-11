@@ -13,7 +13,7 @@ const getSummery = async () => {
 
 export function useSummery() {
   const { isLoading, data } = useQuery({
-    queryKey: ["expenses"],
+    queryKey: ["summery"],
     queryFn: getSummery,
   });
 

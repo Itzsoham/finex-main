@@ -51,11 +51,12 @@ export async function logout() {
   }
 }
 
-export async function updateCurrentUser({ fullName, avatar, phone }) {
+export async function updateCurrentUser({ fullName, avatar, phone, password }) {
   // 1 - Update user fullName and phone
   const updateData = { data: {} };
   if (phone) updateData.data.phone = phone;
   if (fullName) updateData.data.fullName = fullName;
+  if (password) updateData.password = password;
 
   const { data, error } = await supabase.auth.updateUser(updateData);
 

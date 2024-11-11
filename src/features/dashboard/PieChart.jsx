@@ -2,6 +2,8 @@ import { ResponsivePie } from "@nivo/pie";
 import { useTheme } from "@mui/material";
 import { tokens } from "../../theme";
 import { useExpenses } from "../expense/useExpenses";
+import PropTypes from "prop-types";
+import Spinner from "../../components/Spinner";
 
 const processData = (expenses) => {
   const data = {};
@@ -22,10 +24,12 @@ const processData = (expenses) => {
   }));
 };
 
-const PieChart = () => {
+const PieChart = ({ isdashboard = false }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-  const { expenses } = useExpenses();
+  const { expenses, isLoading } = useExpenses();
+
+  if (isLoading) return <Spinner />;
 
   // Check if expenses data is available and not empty
   const processedData =
@@ -106,33 +110,41 @@ const PieChart = () => {
           spacing: 10,
         },
       ]}
-      legends={[
-        {
-          anchor: "bottom",
-          direction: "row",
-          justify: false,
-          translateX: 0,
-          translateY: 56,
-          itemsSpacing: 0,
-          itemWidth: 100,
-          itemHeight: 18,
-          itemTextColor: "#999",
-          itemDirection: "left-to-right",
-          itemOpacity: 1,
-          symbolSize: 18,
-          symbolShape: "circle",
-          effects: [
-            {
-              on: "hover",
-              style: {
-                itemTextColor: "#000",
+      legends={
+        isdashboard
+          ? []
+          : [
+              {
+                anchor: "bottom",
+                direction: "row",
+                justify: false,
+                translateX: 0,
+                translateY: 56,
+                itemsSpacing: 10,
+                itemWidth: 150,
+                itemHeight: 18,
+                itemTextColor: "#999",
+                itemDirection: "left-to-right",
+                itemOpacity: 1,
+                symbolSize: 18,
+                symbolShape: "circle",
+                effects: [
+                  {
+                    on: "hover",
+                    style: {
+                      itemTextColor: "#000",
+                    },
+                  },
+                ],
               },
-            },
-          ],
-        },
-      ]}
+            ]
+      }
     />
   );
+};
+
+PieChart.propTypes = {
+  isdashboard: PropTypes.bool,
 };
 
 export default PieChart;

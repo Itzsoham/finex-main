@@ -31,7 +31,7 @@ const processData = (expenses) => {
   }));
 };
 
-const LineChart = ({ isdahboard = false }) => {
+const LineChart = ({ isdashboard = false }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const { expenses, isLoading } = useExpenses();
@@ -77,7 +77,7 @@ const LineChart = ({ isdahboard = false }) => {
         tickSize: 5,
         tickPadding: 5,
         tickRotation: -45,
-        legend: isdahboard ? undefined : "Month",
+        legend: isdashboard ? undefined : "Month",
         legendOffset: 36,
         legendPosition: "middle",
       }}
@@ -86,7 +86,7 @@ const LineChart = ({ isdahboard = false }) => {
         tickSize: 5,
         tickPadding: 5,
         tickRotation: 0,
-        legend: isdahboard ? undefined : "Amount",
+        legend: isdashboard ? undefined : "Amount",
         legendOffset: -40,
         legendPosition: "middle",
       }}
@@ -131,5 +131,5 @@ export default LineChart;
 
 LineChart.propTypes = {
   isCustomLineColors: PropTypes.bool,
-  isdahboard: PropTypes.bool,
+  isdashboard: PropTypes.bool,
 };

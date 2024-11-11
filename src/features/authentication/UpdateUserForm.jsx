@@ -28,6 +28,7 @@ function UpdateUserForm({ setOpen }) {
 
   const checkoutSchema = yup.object().shape({
     name: yup.string().required("required"),
+    password: yup.string().min(6, "Password must be at least 6 characters"),
     contact: yup
       .string()
       .matches(phoneRegExp, "Phone number is not valid")
@@ -38,6 +39,7 @@ function UpdateUserForm({ setOpen }) {
   const initialValues = {
     name: user?.user_metadata?.fullName || "",
     email: user?.email || "",
+    password: "",
     contact: user?.user_metadata?.phone || "",
     avatar: user?.user_metadata?.avatar || "",
   };
@@ -49,9 +51,9 @@ function UpdateUserForm({ setOpen }) {
   };
 
   const handleFormSubmit = (values) => {
-    const { name: fullName, contact: phone } = values;
+    const { name: fullName, contact: phone, password } = values;
     updateUser(
-      { fullName, avatar: selectedFile, phone },
+      { fullName, avatar: selectedFile, phone, password },
       { onSettled: () => setOpen(false) }
     );
   };
@@ -109,6 +111,21 @@ function UpdateUserForm({ setOpen }) {
                 name="email"
                 sx={{ gridColumn: "span 4" }}
               />
+              <TextField
+                fullWidth
+                variant="filled"
+                type="text"
+                label="Password"
+                value={values.password}
+                name="password"
+                sx={{ gridColumn: "span 4" }}
+                onBlur={handleBlur}
+                onChange={handleChange}
+                error={!!touched.password && !!errors.password}
+                helperText={
+                  touched.password && errors.password ? errors.password : ""
+                }
+              />
 
               <TextField
                 fullWidth
@@ -128,7 +145,7 @@ function UpdateUserForm({ setOpen }) {
 
               {/* File Upload Field */}
               <Box sx={{ gridColumn: "span 4" }}>
-                <Button variant="outlined" component="label">
+                <Button variant="outlined" color="secondary" component="label">
                   Upload Avatar
                   <input
                     type="file"

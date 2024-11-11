@@ -9,7 +9,6 @@ import Heading from "../components/Heading";
 import StatBox from "../features/dashboard/StatBox";
 import ProgressCircle from "../features/dashboard/ProgressCircle";
 import LineChart from "../features/dashboard/LineChart";
-import BarChart from "../features/dashboard/BarChart";
 import PieChart from "../features/dashboard/PieChart";
 import RecipeList from "../features/recipe/RecipeList";
 import { useState } from "react";
@@ -226,11 +225,9 @@ const Dashboard = () => {
             fontWeight="600"
             sx={{ padding: "30px 30px 0 30px" }}
           >
-            Sales Quantity
+            Blank for now
           </Typography>
-          <Box height="250px" mt="-20px">
-            <BarChart isDashboard={true} />
-          </Box>
+          <Box height="250px" mt="-20px"></Box>
         </Box>
         <Box
           gridColumn="span 4"
@@ -243,11 +240,10 @@ const Dashboard = () => {
             fontWeight="600"
             sx={{ marginBottom: "15px" }}
           >
-            Geography Based Traffic
+            Expense Type wise Expense
           </Typography>
           <Box height="200px">
-            {/* <GeographyChart isDashboard={true} /> */}
-            <PieChart />
+            <PieChart isdashboard={true} />
           </Box>
         </Box>
       </Box>

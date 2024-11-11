@@ -10,7 +10,6 @@ import ExpenseType from "./pages/ExpenseType";
 import Expense from "./pages/Expense";
 import Faq from "./pages/Faq";
 import Calendar from "./pages/Calendar";
-import Bar from "./pages/Bar";
 import Line from "./pages/Line";
 import Pie from "./pages/Pie";
 import ExpenseEntry from "./pages/ExpenseEntry";
@@ -45,7 +44,6 @@ function App() {
               <Route path="/add" element={<ExpenseEntry />} />
               <Route path="/faq" element={<Faq />} />
               <Route path="/calendar" element={<Calendar />} />
-              <Route path="/bar" element={<Bar />} />
               <Route path="/line" element={<Line />} />
               <Route path="/pie" element={<Pie />} />
             </Route>

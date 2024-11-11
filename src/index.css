@@ -40,7 +40,6 @@ body,
 
 /* for date picker  */
 
-/* Apply background and text colors */
 .react-datepicker__header {
   background-color: gray; /* Adjust to your theme */
   /* background-color: var(--mui-background-color) ; Adjust to your theme */
