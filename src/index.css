@@ -19,6 +19,14 @@ body,
   position: relative;
 }
 
+.spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 2.5rem;
+  height: calc(100vh - 5rem);
+}
+
 ::-webkit-scrollbar {
   width: 5px;
 }

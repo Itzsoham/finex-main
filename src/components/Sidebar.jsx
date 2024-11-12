@@ -27,7 +27,7 @@ function Sidebar() {
   const colors = tokens(theme.palette.mode);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [selected, setSelected] = useState("");
-  const { user } = useUser();
+  const { user, isAdmin } = useUser();
 
   return (
     <Box
@@ -125,42 +125,49 @@ function Sidebar() {
               icon={<HomeOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
-            />{" "}
-            <Item
-              title="Summery"
-              to="/summery"
-              icon={<SummarizeOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
             />
-            <Item
-              title="Manage Team"
-              to="/team"
-              icon={<PeopleOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-            <Item
-              title="Expense Types"
-              to="/type"
-              icon={<ContactsOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-            <Typography
-              variant="h6"
-              color={colors.grey[300]}
-              sx={{ m: "15px 0 5px 20px" }}
-            >
-              Pages
-            </Typography>
-            <Item
-              title="Expense Entry"
-              to="/add"
-              icon={<PersonOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
+            {isAdmin && (
+              <>
+                <Item
+                  title="Summery"
+                  to="/summery"
+                  icon={<SummarizeOutlinedIcon />}
+                  selected={selected}
+                  setSelected={setSelected}
+                />
+                <Item
+                  title="Manage Team"
+                  to="/team"
+                  icon={<PeopleOutlinedIcon />}
+                  selected={selected}
+                  setSelected={setSelected}
+                />
+                <Item
+                  title="Expense Types"
+                  to="/type"
+                  icon={<ContactsOutlinedIcon />}
+                  selected={selected}
+                  setSelected={setSelected}
+                />
+                <Typography
+                  variant="h6"
+                  color={colors.grey[300]}
+                  sx={{ m: "15px 0 5px 20px" }}
+                >
+                  Pages
+                </Typography>{" "}
+              </>
+            )}
+
+            {!isAdmin && (
+              <Item
+                title="Expense Entry"
+                to="/add"
+                icon={<PersonOutlinedIcon />}
+                selected={selected}
+                setSelected={setSelected}
+              />
+            )}
             <Item
               title="Expenses"
               to="/expense"

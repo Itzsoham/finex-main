@@ -4,16 +4,19 @@ import { ColorModeContext, tokens } from "../theme";
 
 import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
-import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
+import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import SearchIcon from "@mui/icons-material/Search";
 import UserProfile from "../features/authentication/UserProfile";
+import { useLogout } from "../features/authentication/useLogout";
 
 function Topbar() {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const colorMode = useContext(ColorModeContext);
   const [openUserMenu, setOpenUserMenu] = useState(false);
+
+  const { isLoading, logout } = useLogout();
 
   return (
     <Box display="flex" justifyContent="space-between" p={2}>
@@ -39,12 +42,13 @@ function Topbar() {
           )}
         </IconButton>
 
-        <IconButton>
-          <SettingsOutlinedIcon />
-        </IconButton>
         <IconButton onClick={() => setOpenUserMenu(true)}>
           <PersonOutlinedIcon />
           <UserProfile open={openUserMenu} setOpen={setOpenUserMenu} />
+        </IconButton>
+
+        <IconButton disabled={isLoading} onClick={logout}>
+          <LogoutOutlinedIcon />
         </IconButton>
       </Box>
     </Box>

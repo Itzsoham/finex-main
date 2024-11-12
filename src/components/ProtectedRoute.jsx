@@ -18,7 +18,7 @@ function ProtectedRoute({ children }) {
   }, [isAuthenticated, isLoading, navigate]);
 
   // 3> while loading show the spinner
-  if (isLoading)
+  if (isLoading) {
     return (
       <Box
         height={"100vh"}
@@ -30,6 +30,7 @@ function ProtectedRoute({ children }) {
         <Spinner />
       </Box>
     );
+  }
 
   // 4> if user is authenticated, render the App
 

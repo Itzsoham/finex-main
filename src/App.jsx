@@ -4,20 +4,23 @@ import { ColorModeContext, useMode } from "./theme";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+import { lazy, Suspense } from "react";
+
 import Dashboard from "./pages/Dashboard";
-import Team from "./pages/Team";
-import ExpenseType from "./pages/ExpenseType";
-import Expense from "./pages/Expense";
-import Faq from "./pages/Faq";
-import Calendar from "./pages/Calendar";
 import Line from "./pages/Line";
 import Pie from "./pages/Pie";
-import ExpenseEntry from "./pages/ExpenseEntry";
 import Login from "./pages/Login";
 import AppLayout from "./pages/AppLayout";
 import PageNotFound from "./pages/PageNotFound";
 import ProtectedRoute from "./components/ProtectedRoute";
-import ExpenseSummery from "./pages/ExpenseSummery";
+import Spinner from "./components/Spinner";
+
+const Team = lazy(() => import("./pages/Team"));
+const ExpenseType = lazy(() => import("./pages/ExpenseType"));
+const Expense = lazy(() => import("./pages/Expense"));
+const Faq = lazy(() => import("./pages/Faq"));
+const ExpenseEntry = lazy(() => import("./pages/ExpenseEntry"));
+const ExpenseSummery = lazy(() => import("./pages/ExpenseSummery"));
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -37,13 +40,90 @@ function App() {
               }
             >
               <Route index path="/" element={<Dashboard />} />
-              <Route path="/team" element={<Team />} />
-              <Route path="/type" element={<ExpenseType />} />
-              <Route path="/expense" element={<Expense />} />
-              <Route path="/summery" element={<ExpenseSummery />} />
-              <Route path="/add" element={<ExpenseEntry />} />
-              <Route path="/faq" element={<Faq />} />
-              <Route path="/calendar" element={<Calendar />} />
+              <Route
+                path="/team"
+                element={
+                  <Suspense
+                    fallback={
+                      <div className="spinner">
+                        <Spinner />
+                      </div>
+                    }
+                  >
+                    <Team />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="/type"
+                element={
+                  <Suspense
+                    fallback={
+                      <div className="spinner">
+                        <Spinner />
+                      </div>
+                    }
+                  >
+                    <ExpenseType />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="/expense"
+                element={
+                  <Suspense
+                    fallback={
+                      <div className="spinner">
+                        <Spinner />
+                      </div>
+                    }
+                  >
+                    <Expense />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="/summery"
+                element={
+                  <Suspense
+                    fallback={
+                      <div className="spinner">
+                        <Spinner />
+                      </div>
+                    }
+                  >
+                    <ExpenseSummery />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="/add"
+                element={
+                  <Suspense
+                    fallback={
+                      <div className="spinner">
+                        <Spinner />
+                      </div>
+                    }
+                  >
+                    <ExpenseEntry />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="/faq"
+                element={
+                  <Suspense
+                    fallback={
+                      <div className="spinner">
+                        <Spinner />
+                      </div>
+                    }
+                  >
+                    <Faq />
+                  </Suspense>
+                }
+              />
               <Route path="/line" element={<Line />} />
               <Route path="/pie" element={<Pie />} />
             </Route>

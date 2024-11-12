@@ -30,40 +30,14 @@ export async function addEditType(type, id) {
 
 export async function getAllTypes() {
   // Step 1: Fetch types with the created_by field
-  const { data: types, error: typeError } = await supabase
-    .from("Type")
-    .select("id, name, created_by");
+  const { data, error: typeError } = await supabase.from("Type").select("*");
 
   if (typeError) {
     console.error(typeError);
     throw new Error("Failed to fetch types");
   }
 
-  // Step 2: Fetch all users with the Admin API
-  const { data: userData, error: userError } =
-    await supabase.auth.admin.listUsers({
-      page: 1,
-      perPage: 1000,
-    });
-
-  if (userError) {
-    console.error(userError);
-    throw new Error("Failed to fetch users");
-  }
-
-  // Step 3: Map user IDs to names for easy lookup
-  const userMap = userData.users.reduce((acc, user) => {
-    acc[user.id] = user.user_metadata.fullName; // Adjust to whatever field has the display name
-    return acc;
-  }, {});
-
-  // Step 4: Combine types data with user names
-  const typesWithUserNames = types.map((type) => ({
-    ...type,
-    created_by_name: userMap[type.created_by] || "Unknown", // Attach user name or 'Unknown' if not found
-  }));
-
-  return typesWithUserNames;
+  return data;
 }
 
 export async function deleteType(id) {

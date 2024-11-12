@@ -4,7 +4,6 @@ import * as yup from "yup";
 import Heading from "../../components/Heading";
 import PropTypes from "prop-types";
 import { useAddType } from "./useAddType";
-import { useUser } from "../authentication/useUser";
 import { useEditType } from "./useEditType";
 
 const checkoutSchema = yup.object().shape({
@@ -15,7 +14,6 @@ const CreateType = ({ setOpen, type }) => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const { isCreating, addType } = useAddType();
   const { isEditing, editType } = useEditType();
-  const { userId } = useUser();
   const isEditSession = Boolean(type && type.name);
 
   const isLoading = isCreating || isEditing;
@@ -26,7 +24,6 @@ const CreateType = ({ setOpen, type }) => {
   const handleFormSubmit = (values) => {
     const typeData = {
       name: values.name,
-      created_by: userId,
     };
 
     if (isEditSession) {

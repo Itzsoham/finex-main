@@ -7,7 +7,7 @@ export function useAddRecipe() {
   const { mutate: addRecipe, isPending: isCreating } = useMutation({
     mutationFn: createRecipeApi,
     onSuccess: () => {
-      toast.success("New type successfully created");
+      toast.success("New recipe successfully created");
 
       queryClient.invalidateQueries({
         queryKey: ["recipes"],

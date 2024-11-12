@@ -4,12 +4,14 @@ import { useSummery } from "../features/dashboard/useSummery";
 import Heading from "../components/Heading";
 import { DataGrid } from "@mui/x-data-grid";
 import { tokens } from "../theme";
+import { useUser } from "../features/authentication/useUser";
 
 function ExpenseSummery() {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
   const { isLoading, data } = useSummery();
+  const { isAdmin } = useUser();
 
   if (isLoading) return <Spinner />;
 
@@ -21,6 +23,14 @@ function ExpenseSummery() {
 
     { field: "balance_at_end", headerName: "CashOn Hand", flex: 1 },
   ];
+
+  if (isAdmin) {
+    columns.push({
+      field: "created_by_name",
+      headerName: "Created By",
+      flex: 1,
+    });
+  }
 
   const rows = data.map((row, i) => ({
     ...row,

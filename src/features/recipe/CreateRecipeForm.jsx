@@ -17,6 +17,8 @@ import { Formik } from "formik";
 import * as yup from "yup";
 import Heading from "../../components/Heading";
 import DatePicker from "react-datepicker";
+import { useUser } from "../authentication/useUser";
+import "react-datepicker/dist/react-datepicker.css";
 
 const checkoutSchema = yup.object().shape({
   date: yup.date().required("required"),
@@ -34,11 +36,13 @@ function CreateRecipeForm({ open, setOpen }) {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const isNonMobile = useMediaQuery("(min-width:600px)");
+  const { userId, isLoading } = useUser();
 
   const { isCreating, addRecipe } = useAddRecipe();
 
   const handleFormSubmit = (values) => {
-    addRecipe(values);
+    const valuesWithUserId = { ...values, created_by: userId };
+    addRecipe(valuesWithUserId);
     setOpen(false);
   };
 
@@ -146,7 +150,12 @@ function CreateRecipeForm({ open, setOpen }) {
                     </FormControl>
                   </Box>
                   <Box display="flex" justifyContent="end" mt="20px">
-                    <Button type="submit" color="secondary" variant="contained">
+                    <Button
+                      disabled={isLoading || isCreating}
+                      type="submit"
+                      color="secondary"
+                      variant="contained"
+                    >
                       {isCreating ? "Creating..." : "Create New Recipe"}
                     </Button>
                   </Box>

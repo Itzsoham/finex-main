@@ -81,14 +81,6 @@ function ExpenseType() {
       flex: 1,
       cellClassName: "name-column--cell",
     },
-    {
-      field: "created_by_name",
-      headerName: "Created By",
-      type: "number",
-      headerAlign: "left",
-      align: "left",
-      flex: 1,
-    },
   ];
 
   return (

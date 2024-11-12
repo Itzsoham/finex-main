@@ -178,7 +178,7 @@ function ExpenseEntry() {
                 error={!!touched.amount && !!errors.amount}
                 helperText={touched.amount && errors.amount}
                 sx={{ gridColumn: "span 1" }}
-              />{" "}
+              />
               <TextField
                 fullWidth
                 variant="filled"
