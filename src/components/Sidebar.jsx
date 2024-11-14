@@ -159,15 +159,6 @@ function Sidebar() {
               </>
             )}
 
-            {!isAdmin && (
-              <Item
-                title="Expense Entry"
-                to="/add"
-                icon={<PersonOutlinedIcon />}
-                selected={selected}
-                setSelected={setSelected}
-              />
-            )}
             <Item
               title="Expenses"
               to="/expense"

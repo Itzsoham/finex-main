@@ -1,14 +1,15 @@
 import { Box, useTheme } from "@mui/material";
 import { tokens } from "../../theme";
-import { useState } from "react";
 import { useRecipes } from "./useRecipes";
 import Spinner from "../../components/Spinner";
 import { DataGrid } from "@mui/x-data-grid";
+import { useUser } from "../authentication/useUser";
 
 function RecipeList() {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-  const { isLoading, recipes } = useRecipes();
+  const { isAdmin, userId } = useUser();
+  const { isLoading, recipes } = useRecipes(isAdmin, userId);
 
   if (isLoading) return <Spinner />;
 

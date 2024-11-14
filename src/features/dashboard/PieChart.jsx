@@ -4,6 +4,7 @@ import { tokens } from "../../theme";
 import { useExpenses } from "../expense/useExpenses";
 import PropTypes from "prop-types";
 import Spinner from "../../components/Spinner";
+import { useUser } from "../authentication/useUser";
 
 const processData = (expenses) => {
   const data = {};
@@ -27,9 +28,10 @@ const processData = (expenses) => {
 const PieChart = ({ isdashboard = false }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-  const { expenses, isLoading } = useExpenses();
+  const { isLoading: isUserLoading, isAdmin, userId } = useUser();
+  const { expenses, isLoading } = useExpenses(isAdmin, userId);
 
-  if (isLoading) return <Spinner />;
+  if (isLoading || isUserLoading) return <Spinner />;
 
   // Check if expenses data is available and not empty
   const processedData =

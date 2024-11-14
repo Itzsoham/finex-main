@@ -3,50 +3,41 @@ import { tokens } from "../theme";
 import { useState } from "react";
 import { useExpenses } from "../features/expense/useExpenses";
 import Spinner from "../components/Spinner";
-import {
-  Box,
-  Button,
-  InputBase,
-  InputLabel,
-  MenuItem,
-  Modal,
-  Select,
-} from "@mui/material";
+import { Box, Modal } from "@mui/material";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import CheckOutlinedIcon from "@mui/icons-material/CheckOutlined";
 import Heading from "../components/Heading";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import ConfirmDelete from "../components/ConfirmDelete";
-import { useNavigate } from "react-router-dom";
 import { useDeleteExpense } from "../features/expense/useDeleteExpense";
 import { useApproveExpense } from "../features/expense/useApproveExpense";
 import { useUser } from "../features/authentication/useUser";
-import { useSummery } from "../features/dashboard/useSummery";
+import ExpenseFilter from "../features/expense/ExpenseFilter";
 
 const Expense = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-  const navigate = useNavigate();
 
-  const { isAdmin } = useUser();
-  const { isLoading: isLoadingExpense, expenses } = useExpenses();
-  const { data, isLoading: isLoadingSummery } = useSummery();
+  const { isAdmin, userId, isLoading: isLoadingUser } = useUser();
+  const [selectedUser, setSelectedUser] = useState("all");
+  const [month, setMonth] = useState("all");
+
+  const { isLoading: isLoadingExpense, expenses } = useExpenses(
+    isAdmin,
+    userId,
+    selectedUser,
+    month
+  );
 
   const { isLoading: isDeleting, deleteExpense } = useDeleteExpense();
   const { isEditing, approveExpense } = useApproveExpense();
 
   const [openDelete, setOpenDelete] = useState(false);
   const [selectedExpenseId, setSelectedExpenseId] = useState(null);
-  const [month, setMonth] = useState("all");
 
-  const isLoading = isLoadingExpense || isLoadingSummery;
+  const isLoading = isLoadingExpense || isLoadingUser;
 
   if (isLoading) return <Spinner />;
-
-  const summery = data.map((summary, i) => ({
-    ...summary,
-    id: i,
-  }));
 
   const formattedExpenses = expenses?.map((expense) => ({
     ...expense,
@@ -134,87 +125,12 @@ const Expense = () => {
     <Box m="20px">
       <Box display="flex" justifyContent="space-between" alignItems="center">
         <Heading title="Expense" subtitle="List of all Expense" />
-        <Box display="flex" alignItems="flex-end" gap="10px">
-          <Box display="flex" flexDirection="column">
-            <InputLabel id="month">Month</InputLabel>
-            <Select
-              variant="outlined"
-              sx={{
-                height: "40px",
-                width: "150px",
-                backgroundColor: colors.blueAccent[500],
-                color: colors.grey[100],
-              }}
-              labelId="month"
-              name="month"
-              value={month}
-              onChange={(e) => setMonth(e.target.value)}
-            >
-              <MenuItem value="all">All</MenuItem>
-              {summery?.map((month, i) => (
-                <MenuItem key={i} value={month.month}>
-                  {month.month}
-                </MenuItem>
-              ))}
-            </Select>
-          </Box>
-
-          <Box display="flex" flexDirection="column">
-            <InputLabel id="amount">Total Expense</InputLabel>
-            <InputBase
-              variant="outlined"
-              type="number"
-              label="Amount"
-              name="amount"
-              disabled={true}
-              value={5000}
-              sx={{
-                height: "40px",
-                width: "150px",
-                padding: "0 10px",
-
-                borderRadius: "3px",
-                backgroundColor: colors.blueAccent[500],
-                color: colors.grey[100],
-              }}
-            />
-          </Box>
-
-          <Box display="flex" flexDirection="column">
-            <InputLabel id="cash">Cash On Hand</InputLabel>
-            <InputBase
-              variant="outlined"
-              type="number"
-              label="cash"
-              name="cash"
-              disabled={true}
-              value={5000}
-              sx={{
-                height: "40px",
-                width: "150px",
-                padding: "0 10px",
-
-                borderRadius: "3px",
-                backgroundColor: colors.blueAccent[500],
-                color: colors.grey[100],
-              }}
-            />
-          </Box>
-
-          <Button
-            sx={{
-              height: "40px",
-              backgroundColor: colors.blueAccent[500],
-              color: colors.grey[100],
-            }}
-            type="submit"
-            color="info"
-            variant="contained"
-            onClick={() => navigate("/add")}
-          >
-            Create New Expense
-          </Button>
-        </Box>
+        <ExpenseFilter
+          selectedUser={selectedUser}
+          setSelectedUser={setSelectedUser}
+          setMonth={setMonth}
+          month={month}
+        />
       </Box>
 
       <Box

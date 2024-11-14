@@ -5,6 +5,7 @@ import PropTypes from "prop-types";
 import { format, parseISO } from "date-fns";
 import { useExpenses } from "../expense/useExpenses";
 import Spinner from "../../components/Spinner";
+import { useUser } from "../authentication/useUser";
 
 const processData = (expenses) => {
   const data = {};
@@ -34,9 +35,11 @@ const processData = (expenses) => {
 const LineChart = ({ isdashboard = false }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-  const { expenses, isLoading } = useExpenses();
 
-  if (isLoading) return <Spinner />;
+  const { isLoading: isUserLoading, isAdmin, userId } = useUser();
+  const { expenses, isLoading } = useExpenses(isAdmin, userId);
+
+  if (isLoading || isUserLoading) return <Spinner />;
 
   // Check if expenses data is available and not empty
   const processedData =

@@ -1,14 +1,26 @@
 import { useQuery } from "@tanstack/react-query";
-import { getAllExpenses } from "../../services/apiExpense";
+import { getFilteredExpenses } from "../../services/apiExpense";
 
-export function useExpenses() {
-  const { isLoading, data: expenses } = useQuery({
-    queryKey: ["expenses"],
-    queryFn: getAllExpenses,
+export function useExpenses(
+  isAdmin,
+  userId,
+  selectedUser = "all",
+  selectedMonth = "all"
+) {
+  const {
+    isLoading,
+    data: expenses,
+    error,
+  } = useQuery({
+    queryKey: ["expenses", isAdmin, userId, selectedUser, selectedMonth], // Include selectedUser and selectedMonth in the query key
+    queryFn: () =>
+      getFilteredExpenses(isAdmin, userId, selectedUser, selectedMonth), // Pass filters to the query function
+    enabled: isAdmin || !!userId,
   });
 
   return {
     isLoading,
     expenses,
+    error,
   };
 }

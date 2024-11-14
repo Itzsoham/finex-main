@@ -10,8 +10,8 @@ function ExpenseSummery() {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
-  const { isLoading, data } = useSummery();
-  const { isAdmin } = useUser();
+  const { isAdmin, userId } = useUser();
+  const { isLoading, data } = useSummery(isAdmin, userId);
 
   if (isLoading) return <Spinner />;
 
