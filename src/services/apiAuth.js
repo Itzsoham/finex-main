@@ -1,16 +1,11 @@
 import supabase, { supabaseUrl } from "./supabase";
 
 export async function signup({ fullName, email, password, role, phone }) {
-  const { data, error } = await supabase.auth.admin.createUser({
-    email, // User email
-    password, // User password
-    email_confirmed_at: new Date().toISOString(), // Marks email as confirmed
-
-    user_metadata: {
-      // Metadata to store additional information
-      fullName,
-      role,
-      phone,
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      data: { fullName, avtar: "", role, phone },
     },
   });
 
