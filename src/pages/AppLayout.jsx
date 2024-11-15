@@ -1,6 +1,7 @@
 import { Outlet } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import Topbar from "../components/Topbar";
+import { ExpenseFilterProvider } from "../features/expense/ExpenseFilterContext";
 
 function AppLayout() {
   return (
@@ -8,7 +9,9 @@ function AppLayout() {
       <Sidebar />
       <main className="content">
         <Topbar />
-        <Outlet />
+        <ExpenseFilterProvider>
+          <Outlet />
+        </ExpenseFilterProvider>
       </main>
     </>
   );

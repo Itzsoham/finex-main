@@ -1,26 +1,38 @@
-import { Box, Button, IconButton, Typography, useTheme } from "@mui/material";
-import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
-import EmailIcon from "@mui/icons-material/Email";
-import PointOfSaleIcon from "@mui/icons-material/PointOfSale";
-import PersonAddIcon from "@mui/icons-material/PersonAdd";
-import TrafficIcon from "@mui/icons-material/Traffic";
+import { Box, Button, Typography, useTheme } from "@mui/material";
+import { useState } from "react";
 import { tokens } from "../theme";
+import { useUser } from "../features/authentication/useUser";
+import { useMonthlySummeryData } from "../features/dashboard/useMonthlySummeryData";
+
+import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
+import CreditCardIcon from "@mui/icons-material/CreditCard";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import SavingsIcon from "@mui/icons-material/Savings";
 import Heading from "../components/Heading";
 import StatBox from "../features/dashboard/StatBox";
-import ProgressCircle from "../features/dashboard/ProgressCircle";
 import LineChart from "../features/dashboard/LineChart";
-import PieChart from "../features/dashboard/PieChart";
 import RecipeList from "../features/recipe/RecipeList";
-import { useState } from "react";
 import CreateRecipeForm from "../features/recipe/CreateRecipeForm";
+import { getCurrentMonthFormatted } from "../services/helpers";
+import Spinner from "../components/Spinner";
 
 const Dashboard = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const [open, setOpen] = useState(false);
+  const { isAdmin, userId } = useUser();
+
+  const currentUser = isAdmin ? "all" : userId;
+
+  const { data, isLoading } = useMonthlySummeryData(
+    currentUser,
+    getCurrentMonthFormatted()
+  );
+
+  if (isLoading) <Spinner />;
 
   return (
-    <Box m="20px">
+    <Box m="20px" height="100%">
       {/* HEADER */}
       <Box display="flex" justifyContent="space-between" alignItems="center">
         <Heading title="DASHBOARD" subtitle="Welcome to your dashboard" />
@@ -42,13 +54,11 @@ const Dashboard = () => {
           justifyContent="center"
         >
           <StatBox
-            title="12,361"
-            subtitle="Emails Sent"
-            progress={parseInt(0.79)} // Passed as number
-            increase="+14%"
+            title={data?.[0]?.balance_before}
+            subtitle="Opening Amount"
             icon={
-              <EmailIcon
-                sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
+              <AccountBalanceWalletIcon
+                sx={{ color: colors.greenAccent[600], fontSize: "40px" }}
               />
             }
           />
@@ -61,13 +71,12 @@ const Dashboard = () => {
           justifyContent="center"
         >
           <StatBox
-            title="431,225"
-            subtitle="Sales Obtained"
+            title={data?.[0]?.total_recipe}
+            subtitle="Recipe Amount"
             progress={parseInt(0.79)} // Passed as number
-            increase="+21%"
             icon={
-              <PointOfSaleIcon
-                sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
+              <CreditCardIcon
+                sx={{ color: colors.greenAccent[600], fontSize: "40px" }}
               />
             }
           />
@@ -80,13 +89,11 @@ const Dashboard = () => {
           justifyContent="center"
         >
           <StatBox
-            title="32,441"
-            subtitle="New Clients"
-            progress={parseInt(0.79)} // Passed as number
-            increase="+5%"
+            title={data?.[0]?.total_expense}
+            subtitle="Total Expenses"
             icon={
-              <PersonAddIcon
-                sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
+              <ShoppingCartIcon
+                sx={{ color: colors.greenAccent[600], fontSize: "40px" }}
               />
             }
           />
@@ -99,13 +106,11 @@ const Dashboard = () => {
           justifyContent="center"
         >
           <StatBox
-            title="1,325,134"
-            subtitle="Traffic Received"
-            progress={parseInt(0.79)} // Passed as number
-            increase="+43%"
+            title={data?.[0]?.balance_at_end}
+            subtitle="Cash on Hand"
             icon={
-              <TrafficIcon
-                sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
+              <SavingsIcon
+                sx={{ color: colors.greenAccent[600], fontSize: "40px" }}
               />
             }
           />
@@ -115,6 +120,7 @@ const Dashboard = () => {
         <Box
           gridColumn="span 8"
           gridRow="span 2"
+          height="400px"
           backgroundColor={colors.primary[400]}
         >
           <Box
@@ -123,38 +129,15 @@ const Dashboard = () => {
             display="flex "
             justifyContent="space-between"
             alignItems="center"
-          >
-            <Box>
-              <Typography
-                variant="h5"
-                fontWeight="600"
-                color={colors.grey[100]}
-              >
-                Revenue Generated
-              </Typography>
-              <Typography
-                variant="h3"
-                fontWeight="bold"
-                color={colors.greenAccent[500]}
-              >
-                $59,342.32
-              </Typography>
-            </Box>
-            <Box>
-              <IconButton>
-                <DownloadOutlinedIcon
-                  sx={{ fontSize: "26px", color: colors.greenAccent[500] }}
-                />
-              </IconButton>
-            </Box>
-          </Box>
-          <Box height="250px" m="-20px 0 0 0">
+          ></Box>
+          <Box height="350px" m="-20px 0 0 0">
             <LineChart isDashboard={true} /> {/* Corrected prop */}
           </Box>
         </Box>
         <Box
           gridColumn="span 4"
           gridRow="span 2"
+          height="400px"
           backgroundColor={colors.primary[400]}
           overflow="auto"
         >
@@ -189,63 +172,6 @@ const Dashboard = () => {
         </Box>
 
         {/* ROW 3 */}
-        <Box
-          gridColumn="span 4"
-          gridRow="span 2"
-          backgroundColor={colors.primary[400]}
-          p="30px"
-        >
-          <Typography variant="h5" fontWeight="600">
-            Campaign
-          </Typography>
-          <Box
-            display="flex"
-            flexDirection="column"
-            alignItems="center"
-            mt="25px"
-          >
-            <ProgressCircle size="125" />
-            <Typography
-              variant="h5"
-              color={colors.greenAccent[500]}
-              sx={{ mt: "15px" }}
-            >
-              $48,352 revenue generated
-            </Typography>
-            <Typography>Includes extra misc expenditures and costs</Typography>
-          </Box>
-        </Box>
-        <Box
-          gridColumn="span 4"
-          gridRow="span 2"
-          backgroundColor={colors.primary[400]}
-        >
-          <Typography
-            variant="h5"
-            fontWeight="600"
-            sx={{ padding: "30px 30px 0 30px" }}
-          >
-            Blank for now
-          </Typography>
-          <Box height="250px" mt="-20px"></Box>
-        </Box>
-        <Box
-          gridColumn="span 4"
-          gridRow="span 2"
-          backgroundColor={colors.primary[400]}
-          padding="30px"
-        >
-          <Typography
-            variant="h5"
-            fontWeight="600"
-            sx={{ marginBottom: "15px" }}
-          >
-            Expense Type wise Expense
-          </Typography>
-          <Box height="200px">
-            <PieChart isdashboard={true} />
-          </Box>
-        </Box>
       </Box>
     </Box>
   );

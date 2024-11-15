@@ -13,14 +13,14 @@ import { useDeleteExpense } from "../features/expense/useDeleteExpense";
 import { useApproveExpense } from "../features/expense/useApproveExpense";
 import { useUser } from "../features/authentication/useUser";
 import ExpenseFilter from "../features/expense/ExpenseFilter";
+import { useExpenseFilter } from "../features/expense/ExpenseFilterContext";
 
 const Expense = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
   const { isAdmin, userId, isLoading: isLoadingUser } = useUser();
-  const [selectedUser, setSelectedUser] = useState("all");
-  const [month, setMonth] = useState("all");
+  const { selectedUser, month, totalExpense, cashOnHand } = useExpenseFilter();
 
   const { isLoading: isLoadingExpense, expenses } = useExpenses(
     isAdmin,
@@ -125,12 +125,7 @@ const Expense = () => {
     <Box m="20px">
       <Box display="flex" justifyContent="space-between" alignItems="center">
         <Heading title="Expense" subtitle="List of all Expense" />
-        <ExpenseFilter
-          selectedUser={selectedUser}
-          setSelectedUser={setSelectedUser}
-          setMonth={setMonth}
-          month={month}
-        />
+        <ExpenseFilter />
       </Box>
 
       <Box

@@ -1,39 +1,37 @@
 import { Box, Typography, useTheme } from "@mui/material";
-import ProgressCircle from "./ProgressCircle";
 import { tokens } from "../../theme";
 import PropTypes from "prop-types";
 
-const StatBox = ({ title, subtitle, icon, progress, increase }) => {
+const StatBox = ({ title, subtitle, icon }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
   return (
-    <Box width="100%" m="0 30px">
-      <Box display="flex" justifyContent="space-between">
+    <Box width="100%" display="flex" m="0 30px">
+      <Box display="flex" flexDirection="column" justifyContent="center">
+        <Box>{icon}</Box>
         <Box>
-          {icon}
           <Typography
-            variant="h4"
-            fontWeight="bold"
-            sx={{ color: colors.grey[100] }}
+            variant="h5"
+            sx={{ color: colors.greenAccent[500], marginTop: "5px" }}
           >
-            {title}
+            {subtitle}
           </Typography>
         </Box>
-        <Box>
-          <ProgressCircle progress={progress} />
-        </Box>
       </Box>
-      <Box display="flex" justifyContent="space-between" mt="2px">
-        <Typography variant="h5" sx={{ color: colors.greenAccent[500] }}>
-          {subtitle}
-        </Typography>
+      <Box
+        display="flex"
+        marginLeft="10px"
+        justifyContent="center"
+        alignItems="center"
+        flex="1"
+      >
         <Typography
-          variant="h5"
-          fontStyle="italic"
-          sx={{ color: colors.greenAccent[600] }}
+          variant="h3"
+          fontWeight="bold"
+          sx={{ color: colors.grey[100] }}
         >
-          {increase}
+          {title}
         </Typography>
       </Box>
     </Box>
@@ -41,11 +39,9 @@ const StatBox = ({ title, subtitle, icon, progress, increase }) => {
 };
 
 StatBox.propTypes = {
-  title: PropTypes.string,
+  title: PropTypes.number,
   subtitle: PropTypes.string,
   icon: PropTypes.element,
-  progress: PropTypes.number,
-  increase: PropTypes.string,
 };
 
 export default StatBox;

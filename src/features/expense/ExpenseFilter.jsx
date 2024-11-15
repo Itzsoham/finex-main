@@ -7,16 +7,15 @@ import {
   Select,
   useTheme,
 } from "@mui/material";
-import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import PropTypes from "prop-types";
 import { tokens } from "../../theme";
 import { useSummery } from "../dashboard/useSummery";
 import { useUser } from "../authentication/useUser";
 import { useTeam } from "../authentication/useTeam";
-import { useMonthlySummeryData } from "../dashboard/useMonthlySummeryData";
+import { useExpenseFilter } from "./ExpenseFilterContext";
+import { useEffect } from "react";
 
-function ExpenseFilter({ selectedUser, setSelectedUser, month, setMonth }) {
+function ExpenseFilter() {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const navigate = useNavigate();
@@ -24,11 +23,20 @@ function ExpenseFilter({ selectedUser, setSelectedUser, month, setMonth }) {
   const { isAdmin, userId } = useUser();
   const { users } = useTeam();
   const { data } = useSummery(isAdmin, userId);
+  const {
+    month,
+    setMonth,
+    totalExpense,
+    cashOnHand,
+    selectedUser,
+    setSelectedUser,
+  } = useExpenseFilter();
 
-  const [totalExpense, setTotalExpense] = useState(0);
-  const [cashOnHand, setCashOnHand] = useState(0);
-
-  const { data: monthlyData } = useMonthlySummeryData(selectedUser, month);
+  useEffect(() => {
+    if (!isAdmin && users?.users?.length > 0) {
+      setSelectedUser(userId);
+    }
+  }, [isAdmin, userId, users, setSelectedUser]);
 
   const usersData = users?.users;
   const currentUser = isAdmin ? "all" : userId;
@@ -36,35 +44,6 @@ function ExpenseFilter({ selectedUser, setSelectedUser, month, setMonth }) {
     ...summary,
     id: i,
   }));
-
-  useEffect(() => {
-    if (monthlyData?.length > 0) {
-      const expense = monthlyData[0]; // Assuming one record per user per month
-      setTotalExpense(expense.total_expense || 0);
-      setCashOnHand(expense.balance_at_end || 0);
-    } else {
-      setTotalExpense(0);
-      setCashOnHand(0);
-    }
-  }, [monthlyData]);
-
-  useEffect(() => {
-    if (selectedUser === "all") {
-      setSelectedUser(currentUser);
-    }
-
-    if (selectedUser === "all" || month === "all") {
-      setTotalExpense(0);
-      setCashOnHand(0);
-    }
-  }, [
-    selectedUser,
-    setSelectedUser,
-    month,
-    currentUser,
-    totalExpense,
-    cashOnHand,
-  ]);
 
   return (
     <Box display="flex" alignItems="flex-end" gap="10px">
@@ -127,7 +106,6 @@ function ExpenseFilter({ selectedUser, setSelectedUser, month, setMonth }) {
           name="amount"
           disabled={true}
           value={totalExpense}
-          onChange={(e) => setTotalExpense(e.target.value)}
           sx={{
             height: "40px",
             width: "150px",
@@ -149,7 +127,6 @@ function ExpenseFilter({ selectedUser, setSelectedUser, month, setMonth }) {
           name="cash"
           disabled={true}
           value={cashOnHand}
-          onChange={(e) => setCashOnHand(e.target.value)}
           sx={{
             height: "40px",
             width: "150px",
@@ -178,12 +155,5 @@ function ExpenseFilter({ selectedUser, setSelectedUser, month, setMonth }) {
     </Box>
   );
 }
-
-ExpenseFilter.propTypes = {
-  selectedUser: PropTypes.string,
-  setSelectedUser: PropTypes.func,
-  month: PropTypes.string,
-  setMonth: PropTypes.func,
-};
 
 export default ExpenseFilter;
