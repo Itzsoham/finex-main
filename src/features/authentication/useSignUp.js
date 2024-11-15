@@ -9,7 +9,7 @@ export function useSignup() {
       signupApi({ email, password, fullName, role, phone }),
     onSuccess: () => {
       toast.success("User successfully created");
-      queryClient.invalidateQueries("user");
+      queryClient.invalidateQueries("users");
     },
     onError: (error) => {
       toast.error(error.message);
