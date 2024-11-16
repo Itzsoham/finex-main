@@ -10,7 +10,7 @@ export function useAddRecipe() {
       toast.success("New recipe successfully created");
 
       queryClient.invalidateQueries({
-        queryKey: ["recipes"],
+        queryKey: ["recipes", "summery"],
       });
     },
     onError: (err) => {

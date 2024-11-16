@@ -1,11 +1,12 @@
 import { ResponsiveLine } from "@nivo/line";
-import { useTheme } from "@mui/material";
+import { Box, useTheme } from "@mui/material";
 import { tokens } from "../../theme";
 import PropTypes from "prop-types";
 import { format, parseISO } from "date-fns";
 import { useExpenses } from "../expense/useExpenses";
 import Spinner from "../../components/Spinner";
 import { useUser } from "../authentication/useUser";
+import { Typography } from "@mui/material";
 
 const processData = (expenses) => {
   const data = {};
@@ -44,6 +45,19 @@ const LineChart = ({ isdashboard = false }) => {
   // Check if expenses data is available and not empty
   const processedData =
     expenses && expenses.length > 0 ? processData(expenses) : [];
+
+  if (processedData.length === 0) {
+    return (
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        height="100%"
+      >
+        <Typography variant="h4">No expenses data available</Typography>
+      </Box>
+    );
+  }
 
   return (
     <ResponsiveLine
