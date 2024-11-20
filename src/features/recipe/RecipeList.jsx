@@ -17,10 +17,12 @@ function RecipeList() {
     {
       field: "date",
       headerName: "Date",
+      flex: 1,
     },
     {
       field: "amount",
       headerName: "Amount",
+      flex: 1,
     },
     {
       field: "payment",
@@ -29,11 +31,24 @@ function RecipeList() {
     },
   ];
 
+  if (isAdmin) {
+    columns.push({
+      field: "created_by_name",
+      headerName: "Created By",
+      flex: 1,
+    });
+  }
+
   return (
-    <Box m="20px">
+    <Box>
       <Box
-        height="auto"
+        height="75vh"
+        width="100%"
         sx={{
+          overflowX: "auto",
+          "&::-webkit-scrollbar": {
+            height: "5px",
+          },
           "& .MuiDataGrid-root": {
             border: "none",
           },
@@ -58,7 +73,7 @@ function RecipeList() {
           },
         }}
       >
-        <DataGrid rows={recipes} columns={columns} hideFooter={true} />
+        <DataGrid rows={recipes} columns={columns} />
       </Box>
     </Box>
   );

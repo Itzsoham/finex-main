@@ -7,12 +7,36 @@ export const getRecipes = async (isAdmin, userId) => {
     query = query.eq("created_by", userId);
   }
 
-  const { data, error } = await query;
+  const { data: recipes, error } = await query;
 
   if (error) {
     throw new Error(error.message);
   }
-  return data;
+
+  const { data: userData, error: userError } =
+    await supabase.auth.admin.listUsers({
+      page: 1,
+      perPage: 1000,
+    });
+
+  if (userError) {
+    console.error(userError);
+    throw new Error("Failed to fetch users");
+  }
+
+  // Map user IDs to names
+  const userMap = userData.users.reduce((acc, user) => {
+    acc[user.id] = user.user_metadata.fullName || "Unknown";
+    return acc;
+  }, {});
+
+  // Attach user names to expenses
+  const recipesWithUserNames = recipes.map((recipe) => ({
+    ...recipe,
+    created_by_name: userMap[recipe.created_by] || "Unknown",
+  }));
+
+  return recipesWithUserNames;
 };
 
 export const createRecipe = async (recipe) => {

@@ -20,7 +20,7 @@ const Expense = () => {
   const colors = tokens(theme.palette.mode);
 
   const { isAdmin, userId, isLoading: isLoadingUser } = useUser();
-  const { selectedUser, month, totalExpense, cashOnHand } = useExpenseFilter();
+  const { selectedUser, month } = useExpenseFilter();
 
   const { isLoading: isLoadingExpense, expenses } = useExpenses(
     isAdmin,

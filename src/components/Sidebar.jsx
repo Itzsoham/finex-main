@@ -14,12 +14,13 @@ import { tokens } from "../theme";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined";
 import ContactsOutlinedIcon from "@mui/icons-material/ContactsOutlined";
-import ReceiptOutlinedIcon from "@mui/icons-material/ReceiptOutlined";
+import ArticleOutlinedIcon from "@mui/icons-material/ArticleOutlined";
 import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
 import PieChartOutlineOutlinedIcon from "@mui/icons-material/PieChartOutlineOutlined";
 import TimelineOutlinedIcon from "@mui/icons-material/TimelineOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import SummarizeOutlinedIcon from "@mui/icons-material/SummarizeOutlined";
+import PostAddOutlinedIcon from "@mui/icons-material/PostAddOutlined";
 
 function Sidebar() {
   const theme = useTheme();
@@ -125,13 +126,6 @@ function Sidebar() {
               selected={selected}
               setSelected={setSelected}
             />
-            <Item
-              title="Summery"
-              to="/summery"
-              icon={<SummarizeOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
             {isAdmin && (
               <>
                 <Item
@@ -154,14 +148,27 @@ function Sidebar() {
                   sx={{ m: "15px 0 5px 20px" }}
                 >
                   Pages
-                </Typography>{" "}
+                </Typography>
               </>
             )}
-
+            <Item
+              title="Receipes"
+              to="/recipe"
+              icon={<PostAddOutlinedIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
             <Item
               title="Expenses"
               to="/expense"
-              icon={<ReceiptOutlinedIcon />}
+              icon={<ArticleOutlinedIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <Item
+              title="Summery"
+              to="/summery"
+              icon={<SummarizeOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
             />

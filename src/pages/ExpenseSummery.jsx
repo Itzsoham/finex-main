@@ -39,7 +39,10 @@ function ExpenseSummery() {
 
   return (
     <Box m="20px">
-      <Heading title="Expense" subtitle="List of all Expense" />
+      <Heading
+        title="Summery"
+        subtitle="Summery of all months by Expense and Recipe amount"
+      />
 
       <Box
         height="75vh"

@@ -17,6 +17,7 @@ import Expense from "./pages/Expense";
 import ExpenseSummery from "./pages/ExpenseSummery";
 import ExpenseEntry from "./pages/ExpenseEntry";
 import Faq from "./pages/Faq";
+import Recipe from "./pages/Recipe";
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -44,6 +45,7 @@ function App() {
               <Route path="/faq" element={<Faq />} />
               <Route path="/line" element={<Line />} />
               <Route path="/pie" element={<Pie />} />
+              <Route path="/recipe" element={<Recipe />} />
             </Route>
             <Route path="login" element={<Login />} />
             <Route path="*" element={<PageNotFound />} />
