@@ -2,7 +2,7 @@ import { Box, useTheme } from "@mui/material";
 import { tokens } from "../../theme";
 import { useRecipes } from "./useRecipes";
 import Spinner from "../../components/Spinner";
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { useUser } from "../authentication/useUser";
 
 function RecipeList() {
@@ -71,9 +71,20 @@ function RecipeList() {
           "& .MuiCheckbox-root": {
             color: `${colors.greenAccent[200]} !important`,
           },
+          "& .MuiDataGrid-toolbarContainer": {
+            backgroundImage: `linear-gradient(45deg, ${colors.greenAccent[400]} 0%, ${colors.blueAccent[400]} 100%)`,
+            color: "white",
+            width: "fit-content",
+            borderRadius: "5px 5px 0 0",
+            padding: "5px",
+          },
         }}
       >
-        <DataGrid rows={recipes} columns={columns} />
+        <DataGrid
+          rows={recipes}
+          columns={columns}
+          slots={{ toolbar: GridToolbar }}
+        />
       </Box>
     </Box>
   );

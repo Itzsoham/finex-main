@@ -2,7 +2,7 @@ import { Box, useTheme } from "@mui/material";
 import Spinner from "../components/Spinner";
 import { useSummery } from "../features/dashboard/useSummery";
 import Heading from "../components/Heading";
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { tokens } from "../theme";
 import { useUser } from "../features/authentication/useUser";
 
@@ -74,10 +74,20 @@ function ExpenseSummery() {
           "& .MuiCheckbox-root": {
             color: `${colors.greenAccent[200]} !important`,
           },
-          // Custom toolbar styles
+          "& .MuiDataGrid-toolbarContainer": {
+            backgroundImage: `linear-gradient(45deg, ${colors.greenAccent[400]} 0%, ${colors.blueAccent[400]} 100%)`,
+            color: "white",
+            width: "fit-content",
+            borderRadius: "5px 5px 0 0",
+            padding: "5px",
+          },
         }}
       >
-        <DataGrid rows={rows} columns={columns} />
+        <DataGrid
+          rows={rows}
+          columns={columns}
+          slots={{ toolbar: GridToolbar }}
+        />
       </Box>
     </Box>
   );
