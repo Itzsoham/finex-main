@@ -1,7 +1,8 @@
-import supabase from "./supabase";
+import neon from "./neon";
+import { getUsersMap } from "./apiAuth";
 
 export const getRecipes = async (isAdmin, userId) => {
-  let query = supabase.from("Recipe").select("*");
+  let query = neon.from("Recipe").select("*");
 
   if (!isAdmin) {
     query = query.eq("created_by", userId);
@@ -13,24 +14,9 @@ export const getRecipes = async (isAdmin, userId) => {
     throw new Error(error.message);
   }
 
-  const { data: userData, error: userError } =
-    await supabase.auth.admin.listUsers({
-      page: 1,
-      perPage: 1000,
-    });
+  // Map created_by -> user name via the Neon Auth synced users table.
+  const userMap = await getUsersMap();
 
-  if (userError) {
-    console.error(userError);
-    throw new Error("Failed to fetch users");
-  }
-
-  // Map user IDs to names
-  const userMap = userData.users.reduce((acc, user) => {
-    acc[user.id] = user.user_metadata.fullName || "Unknown";
-    return acc;
-  }, {});
-
-  // Attach user names to expenses
   const recipesWithUserNames = recipes.map((recipe) => ({
     ...recipe,
     created_by_name: userMap[recipe.created_by] || "Unknown",
@@ -40,7 +26,7 @@ export const getRecipes = async (isAdmin, userId) => {
 };
 
 export const createRecipe = async (recipe) => {
-  const { data, error } = await supabase.from("Recipe").insert(recipe);
+  const { data, error } = await neon.from("Recipe").insert(recipe);
   if (error) {
     throw new Error(error.message);
   }

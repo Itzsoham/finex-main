@@ -1,8 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
-import supabase from "../../services/supabase";
+import neon from "../../services/neon";
 
 const getSummery = async (isAdmin, userId) => {
-  let query = supabase.from("monthlyexpensereport").select("*");
+  let query = neon.from("monthlyexpensereport").select("*");
 
   if (!isAdmin) {
     // Filter by userId if not admin

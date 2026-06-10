@@ -65,8 +65,8 @@ export default function Login() {
     password: yup.string().required("required"),
   });
   const initialValues = {
-    email: "manager@test.com",
-    password: "123456",
+    email: "admin@finex.com",
+    password: "Finex@2025",
   };
 
   return (

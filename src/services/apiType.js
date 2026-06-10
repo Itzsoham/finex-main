@@ -1,7 +1,7 @@
-import supabase from "./supabase";
+import neon from "./neon";
 
 export async function addEditType(type, id) {
-  let query = supabase.from("Type");
+  let query = neon.from("Type");
 
   // Create type
   if (!id) {
@@ -29,11 +29,10 @@ export async function addEditType(type, id) {
 }
 
 export async function getAllTypes() {
-  // Step 1: Fetch types with the created_by field
-  const { data, error: typeError } = await supabase.from("Type").select("*");
+  const { data, error } = await neon.from("Type").select("*");
 
-  if (typeError) {
-    console.error(typeError);
+  if (error) {
+    console.error(error);
     throw new Error("Failed to fetch types");
   }
 
@@ -41,7 +40,7 @@ export async function getAllTypes() {
 }
 
 export async function deleteType(id) {
-  const { error } = await supabase.from("Type").delete().match({ id });
+  const { error } = await neon.from("Type").delete().match({ id });
 
   if (error) {
     console.error(error);

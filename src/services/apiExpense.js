@@ -1,4 +1,5 @@
-import supabase from "./supabase";
+import neon from "./neon";
+import { getUsersMap } from "./apiAuth";
 
 export async function getFilteredExpenses(
   isAdmin,
@@ -6,7 +7,7 @@ export async function getFilteredExpenses(
   selectedUser,
   selectedMonth
 ) {
-  let query = supabase.from("Expense").select("*,type(name)");
+  let query = neon.from("Expense").select("*,type(name)");
 
   // Apply filters based on isAdmin
   if (!isAdmin) {
@@ -38,25 +39,9 @@ export async function getFilteredExpenses(
     throw new Error("Failed to fetch filtered expenses");
   }
 
-  // Fetch all users to map user names
-  const { data: userData, error: userError } =
-    await supabase.auth.admin.listUsers({
-      page: 1,
-      perPage: 1000,
-    });
+  // Map created_by -> user name via the Neon Auth synced users table.
+  const userMap = await getUsersMap();
 
-  if (userError) {
-    console.error(userError);
-    throw new Error("Failed to fetch users");
-  }
-
-  // Map user IDs to names
-  const userMap = userData.users.reduce((acc, user) => {
-    acc[user.id] = user.user_metadata.fullName || "Unknown";
-    return acc;
-  }, {});
-
-  // Attach user names to expenses
   const expensesWithUserNames = expenses.map((expense) => ({
     ...expense,
     created_by_name: userMap[expense.created_by] || "Unknown",
@@ -66,7 +51,7 @@ export async function getFilteredExpenses(
 }
 
 export async function addEditExpense(expense, id) {
-  let query = supabase.from("Expense");
+  let query = neon.from("Expense");
 
   // Create expense
   if (!id) {
@@ -105,7 +90,7 @@ export async function addEditExpense(expense, id) {
 }
 
 export async function deleteExpense(id) {
-  const { error } = await supabase.from("Expense").delete().match({ id });
+  const { error } = await neon.from("Expense").delete().match({ id });
 
   if (error) {
     console.error(error);
@@ -114,7 +99,7 @@ export async function deleteExpense(id) {
 }
 
 export async function approveExpense(id) {
-  const { error } = await supabase
+  const { error } = await neon
     .from("Expense")
     .update({ status: "Approved" })
     .match({ id });

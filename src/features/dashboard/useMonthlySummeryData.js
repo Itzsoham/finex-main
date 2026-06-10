@@ -1,8 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
-import supabase from "../../services/supabase";
+import neon from "../../services/neon";
 
 const getMonthlyExpenseReport = async (selectedUser, selectedMonth) => {
-  let query = supabase.from("monthlyexpensereport").select("*");
+  let query = neon.from("monthlyexpensereport").select("*");
 
   if (selectedUser !== "all") {
     query = query.eq("created_by", selectedUser);

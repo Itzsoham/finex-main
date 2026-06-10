@@ -10,8 +10,11 @@ export function useUser() {
   return {
     isLoading,
     user,
-    isAuthenticated: user?.role === "authenticated",
-    isAdmin: user?.user_metadata?.role === "Admin",
+    isAuthenticated: Boolean(user),
+    // Single-admin for now: the one migrated account is the admin, so it sees
+    // all data (incl. imported rows whose created_by are old Supabase ids).
+    // When the Team feature is migrated, derive this from the user's role.
+    isAdmin: true,
     userId: user?.id,
   };
 }

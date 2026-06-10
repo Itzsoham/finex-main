@@ -32,7 +32,7 @@ function ExpenseSummery() {
     });
   }
 
-  const rows = data.map((row, i) => ({
+  const rows = (data ?? []).map((row, i) => ({
     ...row,
     id: i,
   }));
